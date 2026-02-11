@@ -9,11 +9,22 @@ class Contact extends Model
 {
     use HasFactory;
 
-    // 以下のカラムへのデータ保存を許可します
     protected $fillable = [
-        'name',
+        'category_id',
+        'first_name',
+        'last_name',
+        'gender',
         'email',
         'tel',
-        'content'
+        'address',
+        'building',
+        'detail',
     ];
+
+    // --- ここから追加 ---
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+    // --- ここまで追加 ---
 }

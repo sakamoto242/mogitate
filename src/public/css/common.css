@@ -1,0 +1,78 @@
+/* --- 全ページ共通のリセット --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffffff;
+    color: #8b7969;
+    font-family: "Inika", serif;
+}
+
+/* --- ヘッダー：ロゴ中央・ボタン右端 --- */
+.header {
+    background: #ffffff;
+    border-bottom: 1px solid #e0dfde;
+    width: 100%;
+}
+
+.header__inner {
+max-width: 1230px;
+    margin: 0 auto;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: center;
+    /* ロゴを中央に */
+    align-items: center;
+    position: relative;
+    /* ★ボタンの配置基準 */
+    min-height: 80px;
+}
+.header__logo {
+    display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translateX(-40px);
+        /* ★ボタンの幅の分だけ左に寄せる */
+}
+
+.header__logo a {
+    font-size: 32px;
+    color: #8b7969;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+}
+
+    .header-nav {
+            position: absolute;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            /* ★ロゴより上に表示 */
+        }
+
+.header-nav__button,
+.header-nav__link {
+    background-color: #fff;
+    border: 1px solid #e0dfde;
+    color: #8b7969;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    /* 文字が縦になるのを防ぐ */
+}
+
+/* --- メインコンテンツの中央寄せ --- */
+main {
+    max-width: 1230px;
+    /* ヘッダーと同じ幅 */
+    margin: 0 auto;
+    /* 左右中央寄せ */
+    padding: 0 40px 100px;
+}

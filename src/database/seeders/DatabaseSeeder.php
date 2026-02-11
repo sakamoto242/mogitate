@@ -11,8 +11,11 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
-    {
-        // \App\Models\User::factory(10)->create();
-    }
+   public function run()
+{
+    $this->call([
+        SeasonSeeder::class,  // 先に季節を入れる
+        ProductSeeder::class, // その後に商品を入れる
+    ]);
+}
 }
