@@ -8,7 +8,7 @@ Markdown
 ### Dockerビルド
 1. **リポジトリのクローン**
    ```bash
-   git clone [https://github.com/sakamoto242/mogitate.git](https://github.com/sakamoto242/mogitate.git)
+   git clone https://github.com/sakamoto242/mogitate.git
 Dockerコンテナの起動
 
 Bash
@@ -37,10 +37,10 @@ Laravel: 8.83.27
 MySQL: 8.0.26
 
 3. ER図
+<img width="693" height="641" alt="スクリーンショット 2026-02-11 220008" src="https://github.com/user-attachments/assets/8b9182e8-6dee-44a0-b47d-320c1469366f" />
 
-<img width="693" height="641" alt="スクリーンショット 2026-02-11 220008" src="https://github.com/user-attachments/assets/ad4021fd-d51a-44e9-b5c3-92b55536a0b7" />
 
-5. URL
+4. URL
 開発環境: http://localhost/
 
 phpMyAdmin: http://localhost:8080/
