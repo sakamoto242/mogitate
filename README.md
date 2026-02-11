@@ -29,18 +29,17 @@ Bash
 php artisan key:generate
 php artisan migrate
 php artisan db:seed
-2. 使用技術
+
+２. 使用技術
 PHP: 8.3.0
-
 Laravel: 8.83.27
-
 MySQL: 8.0.26
 
-3. ER図
+３. ER図
 <img width="693" height="641" alt="スクリーンショット 2026-02-11 220008" src="https://github.com/user-attachments/assets/8b9182e8-6dee-44a0-b47d-320c1469366f" />
 
 
-4. URL
+４. URL
 開発環境: http://localhost/
 
 phpMyAdmin: http://localhost:8080/
