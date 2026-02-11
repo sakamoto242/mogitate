@@ -37,7 +37,10 @@ Laravel: 8.83.27
 MySQL: 8.0.26
 
 3. ER図
-4. URL
+
+<img width="693" height="641" alt="スクリーンショット 2026-02-11 220008" src="https://github.com/user-attachments/assets/ad4021fd-d51a-44e9-b5c3-92b55536a0b7" />
+
+5. URL
 開発環境: http://localhost/
 
 phpMyAdmin: http://localhost:8080/
