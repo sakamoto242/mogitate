@@ -36,15 +36,23 @@ return [
     'mailers' => [
         'smtp' => [
             'transport' => 'smtp',
-            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-            'port' => env('MAIL_PORT', 587),
-            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            'username' => env('MAIL_USERNAME'),
-            'password' => env('MAIL_PASSWORD'),
+            'host' => env('MAIL_HOST', 'mail'), // .envのMAIL_HOSTを見る
+            'port' => env('MAIL_PORT', 1025),   // .envのMAIL_PORTを見る
+            'encryption' => env('MAIL_ENCRYPTION'),
+            'username' => env('MAIL_USERNAME'), // .envのMAIL_USERNAMEを見る
+            'password' => env('MAIL_PASSWORD'), // .envのMAIL_PASSWORDを見る
             'timeout' => null,
             'auth_mode' => null,
+            // 以下の stream 設定は残しておいてOKです（むしろあった方が安定します）
+            'stream' => [
+                'ssl' => [
+                    'allow_self_signed' => true,
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                ],
+            ],
         ],
-
+        // ... 他の設定 ...
         'ses' => [
             'transport' => 'ses',
         ],
@@ -115,4 +123,13 @@ return [
         ],
     ],
 
+    // config/mail.php の 'smtp' ブロックの中、あるいはファイルの一番最後に追加
+
+'stream' => [
+    'ssl' => [
+        'allow_self_signed' => true,
+        'verify_peer' => false,
+        'verify_peer_name' => false,
+    ],
+],
 ];

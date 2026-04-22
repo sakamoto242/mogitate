@@ -1,121 +1,114 @@
 @extends('layouts.app')
 
-@section('css')
-<style>
-  /* 背景と全体のレイアウト */
-  body {
-      background-color: #f2eee9 !important;
-      margin: 0;
-      font-family: "Hiragino Kaku Gothic Pro", "Meiryo", sans-serif;
-  }
-  .register__content {
-      padding: 80px 0;
-  }
-  .register__heading {
-      text-align: center;
-      margin-bottom: 40px;
-  }
-  .register__heading h2 {
-      font-family: 'Inika', serif;
-      font-size: 30px;
-      color: #8b7969;
-      font-weight: normal;
-  }
-
-  /* 白いカードを中央に固定 */
-  .register-form__card {
-      background: #fff;
-      width: 90%;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 60px 80px;
-      border-radius: 4px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-  }
-
-  /* 入力項目を縦に並べる（重要！） */
-  .form__group {
-      margin-bottom: 25px;
-      display: flex;
-      flex-direction: column; /* 縦並びを強制 */
-  }
-
-  /* ラベルを見本通り左上に配置 */
-  .form__label {
-      display: block;
-      font-size: 16px;
-      color: #8b7969;
-      margin-bottom: 10px;
-      text-align: left;
-  }
-
-  /* 入力欄のデザイン（青色を排除） */
-  .form__input input {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      background: #f4f4f4 !important; /* 見本の薄グレー */
-      color: #8b7969;
-      font-size: 16px;
-      outline: none;
-      box-sizing: border-box;
-  }
-
-  /* 自動入力の青色背景を強制上書き */
-  input:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0px 1000px #f4f4f4 inset !important;
-  }
-
-  /* 登録ボタンを中央へ */
-  .form__button {
-      text-align: center;
-      margin-top: 40px;
-  }
-  .form__button-submit {
-      background: #8b7969;
-      color: #fff;
-      border: none;
-      padding: 10px 60px;
-      font-size: 16px;
-      cursor: pointer;
-  }
-</style>
-@endsection
-
 @section('content')
-<div class="register__content">
-  <div class="register__heading">
-    <h2>Register</h2>
-  </div>
+<style>
+    .register-container {
+        max-width: 400px;
+        margin: 80px auto;
+        font-family: 'Inter', sans-serif;
+    }
+    .register-title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        color: #333;
+    }
+    .card { border: none; background: transparent; }
+    .card-header { display: none; }
 
-  <div class="register-form__card">
-    <form class="form" action="/register" method="post">
-      @csrf
-      <div class="form__group">
-        <label class="form__label">お名前</label>
-        <div class="form__input">
-          <input type="text" name="name" value="{{ old('name') }}" placeholder="例: 山田 太郎">
+    .form-group-custom { margin-bottom: 20px; }
+    .form-group-custom label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+    .form-control-custom {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    /* エラーがある時の枠線 */
+    .is-invalid { border-color: #dc3545 !important; }
+
+    .btn-register-red {
+        width: 100%;
+        background-color: #ff5a5f;
+        color: white;
+        padding: 14px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    .error-message {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+    .register-footer { text-align: center; margin-top: 20px; }
+</style>
+
+<div class="register-container">
+    <h1 class="register-title">会員登録</h1>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+
+                {{-- ユーザー名 --}}
+<div class="form-group-custom">
+    <label>ユーザー名</label>
+    <input type="text" name="name" class="form-control-custom @error('name') is-invalid @enderror" value="{{ old('name') }}">
+    @error('name')
+        {{-- ここで $message を表示すれば「お名前を入力してください」が出ます --}}
+        <span class="error-message"><strong>{{ $message }}</strong></span>
+    @enderror
+</div>
+
+{{-- メールアドレス --}}
+<div class="form-group-custom">
+    <label>メールアドレス</label>
+    <input type="email" name="email" class="form-control-custom @error('email') is-invalid @enderror" value="{{ old('email') }}">
+    @error('email')
+        <span class="error-message"><strong>{{ $message }}</strong></span>
+    @enderror
+</div>
+
+{{-- パスワード --}}
+<div class="form-group-custom">
+    <label>パスワード</label>
+    <input type="password" name="password" class="form-control-custom @error('password') is-invalid @enderror">
+    @error('password')
+        <span class="error-message"><strong>{{ $message }}</strong></span>
+    @enderror
+</div>
+
+                {{-- 確認用パスワード --}}
+                <div class="form-group-custom">
+                    <label>確認用パスワード</label>
+                    <input type="password" class="form-control-custom" name="password_confirmation">
+                    {{-- 
+                        確認用パスワードのエラー（一致しません）は、
+                        Fortifyの仕様上 password のエラーとして返ってくるため、ここには @error は不要です
+                    --}}
+                </div>
+
+                <button type="submit" class="btn-register-red">
+                    登録する
+                </button>
+
+                <div class="register-footer">
+                    <a href="{{ route('login') }}">ログインはこちら</a>
+                </div>
+            </form>
         </div>
-      </div>
-
-      <div class="form__group">
-        <label class="form__label">メールアドレス</label>
-        <div class="form__input">
-          <input type="email" name="email" value="{{ old('email') }}" placeholder="例: test@example.com">
-        </div>
-      </div>
-
-      <div class="form__group">
-        <label class="form__label">パスワード</label>
-        <div class="form__input">
-          <input type="password" name="password" placeholder="例: coachtech1106">
-        </div>
-      </div>
-
-      <div class="form__button">
-        <button class="form__button-submit" type="submit">登録</button>
-      </div>
-    </form>
-  </div>
+    </div>
 </div>
 @endsection

@@ -32,22 +32,40 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
+
+        // 会員登録画面
         Fortify::registerView(function () {
-        return view('auth.register');
-    });
+            return view('auth.register');
+        });
 
-    Fortify::loginView(function () {
-        return view('auth.login');
-    });
+        // ログイン画面
+        Fortify::loginView(function () {
+            return view('auth.login');
+        });
 
+        // メール認証待ち画面
+        Fortify::verifyEmailView(function () {
+            return view('auth.verify-email');
+        });
+
+        // メール認証完了後のリダイレクト先をカスタマイズ
+        $this->app->instance(
+            \Laravel\Fortify\Contracts\VerifyEmailResponse::class,
+            new class implements \Laravel\Fortify\Contracts\VerifyEmailResponse {
+                public function toResponse($request) {
+                    return redirect('/mypage/profile');
+                }
+            }
+        );
+
+        // ログイン制限（RateLimiter）の設定
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
-
             return Limit::perMinute(5)->by($throttleKey);
         });
 
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
-    }
+    } // ← bootメソッドの終わりはここです
 }

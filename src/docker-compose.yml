@@ -16,10 +16,10 @@ services:
   mysql:
     image: mysql:8.0.26
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel_db
-      MYSQL_USER: laravel_user
-      MYSQL_PASSWORD: laravel_pass
+      - MYSQL_ROOT_PASSWORD: root
+      - MYSQL_DATABASE: laravel_db
+      - MYSQL_USER: laravel_user
+      - MYSQL_PASSWORD: laravel_pass
     volumes:
       - ./docker/mysql/data:/var/lib/mysql
   phpmyadmin:
@@ -29,3 +29,9 @@ services:
       - PMA_HOST=mysql
     ports:
       - 8080:80
+
+  mail:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"

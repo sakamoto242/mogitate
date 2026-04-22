@@ -1,337 +1,136 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>商品一覧</title>
-    <style>
-        /* CSS: 見本（2枚目）のデザインを再現 */
-body {
-background-color: #fcfcfc; /* 真っ白より少しだけグレーに */
-}
+@extends('layouts.app')
 
-.main-header {
-background-color: #fff;
-padding: 15px 0;
-border-bottom: 1px solid #eee;
-}
-
-.header-container {
-max-width: 1200px;
-margin: 0 auto;
-padding: 0 20px;
-}
-
-/* ロゴのスタイル（見本再現） */
-.logo {
-font-size: 32px;
-font-weight: 900;
-color: #e3c400; /* もぎたてイエロー */
-text-decoration: none;
-font-style: italic;
-font-family: 'Arial Black', sans-serif;
-letter-spacing: -1px;
-}
-
-
-.main-container {
-display: flex;
-max-width: 1200px;
-margin: 40px auto;
-gap: 30px;
-padding: 0 20px;
-}
-
-        /* 左側：サイドバー */
-.sidebar {
-width: 250px; flex-shrink: 0;
-}
-.sidebar input[type="text"] {
-    width: 100%;
-    height: 45px; /* 高さを出す */
-    padding: 0 15px;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px; /* 丸みを強くする */
-    box-sizing: border-box;
-    outline: none;
-    font-size: 14px;
-    background-color: #fff;
-    margin-bottom: 10px;
-}
-.sidebar select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 10px; /* 入力欄と同じ 10px に設定 */
-    background-color: white;
-    cursor: pointer;
-    outline: none;
-    /* ブラウザ標準の矢印デザインを少しスッキリさせる場合 */
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-}
-.sort-section {
-    position: relative;
-}
-
-.sort-section::after {
-    content: "▼";
-    font-size: 10px;
-    color: #ccc;
-    position: absolute;
-    right: 15px;
-    top: 45px; /* ラベルの高さに合わせて調整してください */
-    pointer-events: none;
-}
-.btn-search { 
-    width: 100%; background-color: #ffcc00; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; 
+@section('content')
+<style>
+    /* 1. 全体を中央に寄せ、適切な幅を持たせる */
+    .products-container {
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 40px 20px;
     }
 
-.btn-search:hover {
-    background-color: #f0c000; /* ホバーで少し暗く */
-}
-
-/* 価格順表示のセレクトボックスも丸みを統一 */
-.sidebar select {
-    width: 100%;
-    height: 45px;
-    padding: 0 15px;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    background-color: #fff;
-    cursor: pointer;
-    outline: none;
-    color: #999; /* 見本のように少し薄い色にする */
-}
-
-    /* 右側：コンテンツ */
-.product-content {
-    flex-grow: 1;
-    max-width: 900px;
-    }
-.content-header {
-    display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
-    }
-.content-header h1 {
-    color: #8b4513; margin: 0;
-    }
-.btn-add {
-    background-color:#ff9933 !important;
-    color: #888888 !important;               /* 文字をグレーにする */
-    border: 2px solid #ff9933 !important;    /* 周りをオレンジの線で囲む */
-    padding: 8px 20px;
-    text-decoration: none;
-    border-radius: 8px;                      /* 角の丸み */
-    font-weight: bold;
-    font-size: 14px;
-    display: inline-block;
-    transition: all 0.3s;
+    /* 2. 画面いっぱいのグレーの線を引くためのラッパー */
+    .tab-menu-wrapper {
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+        border-bottom: 1px solid #ddd; 
+        margin-bottom: 40px;
     }
 
-        /* グリッド表示 */
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-.product-card {
-    background: #fff;
-    border-radius: 5px; /* 角丸は控えめ */
-    border: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* 柔らかい影 */
-}
-.product-card img {
-    width: 100%;
-    height: 180px;      /* 高さを少し高めに固定 */
-    object-fit: cover;  /* 画像をトリミングして枠に収める */
-    display: block;
+    .tab-menu {
+        display: flex;
+        gap: 50px;
+        max-width: 1024px;
+        margin: 0 auto;
+        padding: 0 50px;
+    }
+
+    .tab-item {
+        text-decoration: none;
+        padding-bottom: 15px;
+        font-weight: bold;
+        font-size: 16px;
+        color: #888;
+        border-bottom: 3px solid transparent;
+        margin-bottom: -1px; 
+    }
+
+    .tab-item.active {
+        color: #ff5a5f;
+        border-bottom: 3px solid #ff5a5f;
+    }
+
+    /* 3. 商品グリッドを横4列に固定 */
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+    }
+
+    .product-image-box {
+        position: relative;
+        aspect-ratio: 1 / 1;
+        background-color: #d9d9d9;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+
+    .product-image-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .product-card a {
+    text-decoration: none !important; /* 下線を消す */
+    color: #333 !important;          /* 文字を黒にする */
 }
 
-.product-info {
-    padding: 15px;
-    border-top: 1px solid #f0f0f0;
-    display: flex;
-    justify-content: space-between;
-}
-
-.pagination-wrapper {
-    margin: 40px 0;
-    display: flex;
-    justify-content: center;
-}
-
-.pagination {
-    display: flex;
-    list-style: none;
-    padding: 0;
-}
-
-.pagination li {
-    margin: 0 5px;
-}
-
-.pagination li a,
-.pagination li span {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    background-color: transparent; /* 背景を透明に */
-    border: none; /* 枠線を消す */
-    color: #333 !important;
-    font-size: 16px;
-    text-decoration: none;
-}
-.pagination li.active span {
-    color: #ffcc00 !important; /* アクティブな数字だけ黄色く */
-    font-weight: bold;
-}
-
-.pagination li a:hover {
-    background-color: #fff9c4;
-}
-.sort-section {
-    margin-top: 30px;
-}
-
-.sort-section label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-/* 商品一覧のタイトル色（見本のような茶色系） */
-.content-header h1 {
-    font-size: 26px;
-    color: #333;
-}
-.btn-search {
-    width: 100%;
-    height: 45px;
-    background-color: #ffcc00; /* 見本の黄色 */
-    color: #000 !important;    /* 文字を確実に黒にする */
-    border: none;
-    border-radius: 12px;       /* 角を丸く */
-    font-weight: bold;
-    cursor: pointer;
+    .product-name {
+        font-size: 15px;
     margin-top: 10px;
-}
-.sort-section label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 15px;
-    color: #000 !important;
-}
-
-.product-info span:last-child {
-    font-weight: bold;
-    font-size: 16px;
-}
-
-.product-info span:first-child {
-    font-size: 16px;
-    color: #333;
-}
-
-.product-card a {
-    text-decoration: none;
-    color: inherit;
-}
-
-/* 絞り込み条件のタグ表示 */
-.search-tag {
-    display: inline-flex;
-    align-items: center;
-    background: #fff;
-    border: 1px solid #ffd700;
-    border-radius: 20px;
+    font-weight: 500;
+    }
+    /* Soldラベルのデザイン */
+.sold-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(255, 0, 0, 0.8); /* 赤い半透明 */
+    color: white;
     padding: 5px 15px;
-    margin-top: 15px;
-    font-size: 13px;
-    color: #333;
-}
-
-.search-tag .close-icon {
-    margin-left: 8px;
-    color: #ffd700;
     font-weight: bold;
-    text-decoration: none;
-    cursor: pointer;
+    font-size: 14px;
+    z-index: 10;
 }
+</style>
 
-    </style>
-</head>
-<body>
-
-
-<header class="main-header">
-    <div class="header-container">
-        <a href="{{ route('product.index') }}" class="logo">mogitate</a>
+<div class="products-container">
+    {{-- タブメニュー --}}
+<div class="tab-menu-wrapper">
+    <div class="tab-menu">
+        {{-- おすすめタブ：現在のキーワードをリレーする --}}
+        <a href="{{ route('product.index', ['keyword' => request('keyword')]) }}" 
+           class="tab-item {{ !request('page') ? 'active' : '' }}">
+           おすすめ
+        </a>
+        
+        {{-- マイリストタブ：現在のキーワードをリレーする --}}
+        <a href="{{ route('product.index', ['page' => 'mylist', 'keyword' => request('keyword')]) }}" 
+           class="tab-item {{ request('page') == 'mylist' ? 'active' : '' }}">
+           マイリスト
+        </a>
     </div>
-</header>
-<div class="content-wrapper" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-    
-    <div class="content-header" style="display: flex; justify-content: space-between; align-items: center; margin: 40px 0 20px;">
-        <h1 style="color: #000; font-size: 28px;">商品一覧</h1>
-        <a href="{{ route('product.create') }}" class="btn-add">+ 商品を追加</a>
-    </div>
-
-    <div class="main-container" style="display: flex; gap: 30px;">
-       <aside class="sidebar">
-    <form action="{{ route('product.index') }}" method="GET">
-        <input type="text" name="name" placeholder="商品名で検索" value="{{ request('name') }}">
-        <button type="submit" class="btn-search">検索</button>
-
-        <div class="active-filters" style="margin-top: 10px;">
-    @if(request('sort'))
-        <div class="search-tag">
-            {{ request('sort') == 'high' ? '高い順に表示' : '低い順に表示' }}
-            <a href="{{ route('product.index', request()->except('sort')) }}" class="close-icon">×</a>
-        </div>
-    @endif
-    
-    @if(request('name'))
-        <div class="search-tag">
-            「{{ request('name') }}」
-            <a href="{{ route('product.index', request()->except('name')) }}" class="close-icon">×</a>
-        </div>
-    @endif
 </div>
 
-        <div class="sort-section" style="margin-top: 40px;">
-            <label>価格順で表示</label>
-            <select name="sort" onchange="this.form.submit()">
-                <option value="" disabled {{ !request('sort') ? 'selected' : '' }}>価格で並べ替え</option>
-                <option value="low" {{ request('sort') == 'low' ? 'selected' : '' }}>低い順に表示</option>
-                <option value="high" {{ request('sort') == 'high' ? 'selected' : '' }}>高い順に表示</option>
-            </select>
-        </div>
-    </form>
-</aside>
+    {{-- 商品グリッド --}}
+    <div class="product-grid">
+        @forelse($products as $product)
+    <div class="product-card">
+        <a href="{{ route('product.show', $product->id) }}" style="text-decoration: none; color: inherit;">
+            <div class="product-image-box">
+                @if($product->image_url)
+                    <img src="{{ asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}">
+                @else
+                    <span style="color: #888;">No Image</span>
+                @endif
 
-        <main class="product-content" style="flex-grow: 1;">
-            <div class="product-grid">
-                @foreach($products as $product)
-                    <div class="product-card">
-                       <a href="{{ route('product.edit', $product->id) }}">
-                            <img src="/storage/{{ $product->image }}" alt="{{ $product->name }}">
-                            <div class="product-info">
-                                <span>{{ $product->name }}</span>
-                                <span>¥{{ number_format($product->price) }}</span>
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
+                {{-- ★ ここを追加：購入者がいる場合はSoldを表示 --}}
+                @if($product->buyer_id)
+                    <div class="sold-label">Sold</div>
+                @endif
             </div>
-        </main>
+            <p class="product-name">{{ $product->name }}</p>
+        </a>
+    </div>
+@empty
+            <p style="grid-column: 1 / -1; text-align: center; color: #888; padding: 100px 0;">商品がありません。</p>
+        @endforelse
     </div>
 </div>
-
-<div class="pagination-wrapper">
-    {{ $products->appends(request()->query())->links() }}
-</div>
-
-</body>
-</html>
+@endsection

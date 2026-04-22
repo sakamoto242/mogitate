@@ -1,78 +1,90 @@
-/* --- 全ページ共通のリセット --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ヘッダー全体の背景を真っ黒に固定 */
+.bg-black {
+    background-color: #000000 !important;
 }
 
-body {
-    background-color: #ffffff;
-    color: #8b7969;
-    font-family: "Inika", serif;
+/* 検索バーの見た目調整（高さを抑えて角を丸く） */
+.navbar .form-control {
+    border-radius: 4px;
+    border: none;
+    padding: 8px 15px;
 }
 
-/* --- ヘッダー：ロゴ中央・ボタン右端 --- */
-.header {
-    background: #ffffff;
-    border-bottom: 1px solid #e0dfde;
-    width: 100%;
+/* ナビゲーションリンクの文字（ログアウト・マイページ） */
+.navbar-dark .nav-link {
+    font-weight: bold;
+    color: #ffffff !important;
+    font-size: 15px;
 }
 
-.header__inner {
-max-width: 1230px;
-    margin: 0 auto;
-    padding: 20px 40px;
-    display: flex;
-    justify-content: center;
-    /* ロゴを中央に */
-    align-items: center;
-    position: relative;
-    /* ★ボタンの配置基準 */
+/* 出品ボタン（白い四角いボタン） */
+.btn-light {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-radius: 4px;
+    padding: 6px 20px;
+    border: none;
+}
+
+/* ロゴのフォント（太字で少し間隔をあける） */
+.navbar-brand {
+    letter-spacing: 1px;
+}
+
+/* 検索バーをよりイメージに近づける */
+.navbar .form-control {
+    border-radius: 8px;
+    /* 角をもう少し丸く */
+    height: 45px;
+    border: none;
+}
+
+/* 「出品」ボタンを少し大きく、文字を中央に */
+.btn-light {
+    padding: 8px 25px !important;
+    font-size: 16px;
+    border-radius: 5px !important;
+}
+
+/* ヘッダー全体の高さを微調整 */
+.navbar {
     min-height: 80px;
 }
-.header__logo {
-    display: flex;
-        align-items: center;
-        justify-content: center;
-        transform: translateX(-40px);
-        /* ★ボタンの幅の分だけ左に寄せる */
+
+/* 下のメインコンテンツとの間の余白を調整 */
+main.py-4 {
+    padding-top: 0 !important;
+    /* ヘッダー直下の余白を詰める */
 }
 
-.header__logo a {
-    font-size: 32px;
-    color: #8b7969;
-    text-decoration: none;
-    font-weight: bold;
-    display: block;
+/* セレクトボックス自体の見た目 */
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
 }
 
-    .header-nav {
-            position: absolute;
-            right: 40px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 10;
-            /* ★ロゴより上に表示 */
-        }
-
-.header-nav__button,
-.header-nav__link {
-    background-color: #fff;
-    border: 1px solid #e0dfde;
-    color: #8b7969;
-    padding: 8px 16px;
-    font-size: 14px;
-    cursor: pointer;
-    text-decoration: none;
-    white-space: nowrap;
-    /* 文字が縦になるのを防ぐ */
+/* クリックした（フォーカスした）時に青くする */
+select:focus {
+    border-color: #007bff;
+    /* 青色 */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+/* 1. マウスを乗せた時に枠線を青くする */
+select:hover {
+    border-color: #007bff;
 }
 
-/* --- メインコンテンツの中央寄せ --- */
-main {
-    max-width: 1230px;
-    /* ヘッダーと同じ幅 */
-    margin: 0 auto;
-    /* 左右中央寄せ */
-    padding: 0 40px 100px;
+/* 2. 選択肢（中身）の文字色などを指定（※ブラウザにより限界あり） */
+select option {
+    background-color: #ffffff;
+    color: #333;
+}
+
+/* 3. 【重要】OS標準のグレーを打ち消して青く見せる工夫 */
+/* WindowsのChromeなどではこれを入れると選択時のアクセントが青くなりやすいです */
+select {
+    accent-color: #007bff;
 }

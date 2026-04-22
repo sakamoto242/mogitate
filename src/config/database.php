@@ -44,14 +44,14 @@ return [
         ],
 
         'mysql' => [
-            'driver' => 'mysql',
+       'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
-            'unix_socket' => env('DB_SOCKET', ''),
+            'host' => 'mysql',           // ← '127.0.0.1' から修正
+            'port' => '3306',            // ← '3306' に修正
+            'database' => 'laravel_db',   // ← 'forge' から修正
+            'username' => 'laravel_user', // ← 'forge' から修正
+            'password' => 'laravel_pass', // ← '' から修正
+            'unix_socket' =>env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',

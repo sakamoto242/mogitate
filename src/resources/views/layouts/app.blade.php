@@ -1,40 +1,71 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FashionablyLate</title>
-  <link rel="stylesheet" href="{{ asset('css/sanitize.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/common.css') }}?v={{ time() }}">
-  @yield('css')
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COACHTECH</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* ログイン・登録画面ではヘッダーの要素を隠す */
+        @if (Route::is('login') || Route::is('register') || Route::is('verification.notice'))
+            .navbar .d-flex.align-items-center.justify-content-end,
+            .navbar form,
+            .navbar .flex-grow-1 {
+                display: none !important;
+            }
+        @endif
+    </style>
 </head>
-<body>
-  <header class="header">
-  <div class="header__inner">
-    {{-- ロゴを中央に保つための空要素（バランス用） --}}
-    <div class="header-utilities"></div>
+<body style="background-color: #fff;">
+    <nav class="navbar navbar-expand-md navbar-dark bg-black py-3">
+        <div class="container-fluid px-5">
+            <div class="d-flex align-items-center w-100">
+                {{-- ロゴ --}}
+                <div class="d-flex align-items-center" style="min-width: 200px;">
+                    <a class="navbar-brand m-0" href="{{ url('/') }}">
+                        <img src="{{ asset('storage/COACHTECHヘッダーロゴ.png') }}" alt="COACHTECH" style="height: 32px; width: auto;">
+                    </a>
+                </div>
 
-    <div class="header__logo">
-      <a href="/">FashionablyLate</a>
-    </div>
+                <div class="flex-grow-1"></div>
 
-    <nav class="header-nav">
-      @if (Auth::check())
-        <form action="/logout" method="post" style="display: inline;">
-          @csrf
-          <button class="header-nav__button" type="submit">logout</button>
+                {{-- 検索バー --}}
+                <div style="width: 100%; max-width: 450px;">
+    <form action="{{ route('product.index') }}" method="GET">
+        <input type="text" 
+               class="form-control" 
+               name="keyword" 
+               placeholder="なにをお探しですか？" 
+               value="{{ $keyword ?? '' }}">
+    </form>
+</div>
+
+                <div class="flex-grow-1"></div>
+
+               {{-- 右側メニュー --}}
+<div class="d-flex align-items-center justify-content-end" style="min-width: 300px;">
+    @auth
+        {{-- ★マイページボタンを追加 --}}
+        <a href="{{ route('mypage') }}" class="nav-link text-white fw-bold me-4">マイページ</a>
+
+        <form action="{{ route('logout') }}" method="POST" class="m-0 me-4">
+            @csrf
+            <button type="submit" class="nav-link text-white fw-bold" style="background: none; border: none; padding: 0;">ログアウト</button>
         </form>
-      @elseif (Request::is('login'))
-        <a href="/register" class="header-nav__link">register</a>
-      @elseif (Request::is('register'))
-        <a href="/login" class="header-nav__link">login</a>
-      @endif
-    </nav>
-  </div>
-</header>
+    @else
+        <a href="{{ route('login') }}" class="nav-link text-white me-4 fw-bold">ログイン</a>
+        {{-- 未ログイン時は「会員登録」を表示 --}}
+        <a href="{{ route('register') }}" class="nav-link text-white me-4 fw-bold">会員登録</a>
+    @endauth
 
-  <main>
-    @yield('content')
-  </main>
+    <a href="{{ route('products.create') }}" class="btn btn-light fw-bold px-4">出品</a>
+</div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        @yield('content')
+    </main>
 </body>
 </html>

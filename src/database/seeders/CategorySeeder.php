@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Category;
 
 class CategorySeeder extends Seeder
 {
@@ -11,17 +12,28 @@ class CategorySeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+ public function run()
     {
+        // 'name' から 'content' に修正
         $categories = [
-        ['content' => '商品のお届けについて'],
-        ['content' => '商品の交換について'],
-        ['content' => '商品トラブル'],
-        ['content' => 'ショップへのお問い合わせ'],
-        ['content' => 'その他'],
-    ];
-    foreach ($categories as $category) {
-        \App\Models\Category::create($category);
-    }
+            ['content' => 'ファッション'],
+            ['content' => '家電'],
+            ['content' => 'インテリア'],
+            ['content' => 'レディース'],
+            ['content' => 'メンズ'],
+            ['content' => 'コスメ'],
+            ['content' => '本'],
+            ['content' => 'ゲーム'],
+            ['content' => 'スポーツ'],
+            ['content' => 'キッチン'],
+            ['content' => 'ハンドメイド'],
+            ['content' => 'アクセサリー'],
+            ['content' => 'おもちゃ'],
+            ['content' => 'ベビー・キッズ'],
+        ];
+
+        foreach ($categories as $category) {
+            Category::create($category);
+        }
     }
 }

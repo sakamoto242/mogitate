@@ -1,237 +1,191 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ $product->name }} の詳細</title>
-    <style>
-    /* 見本を再現するためのCSS */
-.container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-}
+@extends('layouts.app')
 
-.breadcrumb {
-    margin-bottom: 20px;
-    font-size: 14px;
-    color: #66b3ff;
-}
-.breadcrumb a { color: #66b3ff; text-decoration: none; }
+@section('content')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-.main-content-layout {
-    display: flex;
-    gap: 40px; /* 左右の間隔 */
-    margin-bottom: 30px;
-}
+<style>
+    /* 全体レイアウト */
+    .show-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        display: flex;
+        gap: 60px;
+        padding: 0 20px;
+        align-items: flex-start;
+    }
 
-.left-column { flex: 1; }
-.right-column { flex: 1; }
+    .show-image-box { flex: 1; text-align: center; }
+    .show-image-box img { width: 100%; max-width: 450px; height: auto; }
+    .show-details { flex: 1; }
 
-.image-preview-container img {
-    width: 100%;
-    border-radius: 4px;
-    background: #f9f9f9;
-}
+    /* 商品タイトル・価格 */
+    .product-title { font-size: 28px; font-weight: bold; margin-bottom: 5px; }
+    .brand-name { color: #666; margin-bottom: 15px; }
+    .price { font-size: 24px; font-weight: bold; margin-bottom: 20px; }
 
-.file-upload-box {
-    margin-top: 10px;
-}
+    /* アイコン */
+    .icon-group { display: flex; gap: 30px; margin-bottom: 25px; }
+    .icon-item { text-align: center; }
+    .icon-item i { font-size: 28px; display: block; margin-bottom: 4px; }
+    .like-btn { background: none; border: none; padding: 0; cursor: pointer; }
 
-.form-group { margin-bottom: 20px; }
-label { display: block; font-weight: bold; margin-bottom: 8px; color: #555; }
+    /* 購入ボタン */
+    .btn-purchase {
+        background-color: #ff5a5f;
+        color: white !important;
+        text-align: center;
+        padding: 12px;
+        border-radius: 4px;
+        display: block;
+        text-decoration: none;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
 
-input[type="text"], input[type="number"], textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
+    /* セクションタイトル（見本通りの下線） */
+    .section-title {
+        font-size: 20px;
+        font-weight: bold;
+        border-bottom: 1px solid #333;
+        padding-bottom: 10px;
+        margin: 40px 0 20px;
+    }
 
-.season-checkbox-group {
-    display: flex;
-    gap: 15px;
-}
+    /* 商品情報テーブル */
+    .info-table { width: 100%; border-collapse: collapse; }
+    .info-table th { width: 30%; text-align: left; padding: 15px 0; font-weight: bold; }
+    .info-table td { padding: 15px 0; }
 
-.description-area textarea {
-    height: 150px;
-}
+    /* カテゴリータグ */
+    .category-tag {
+        background: #e0e0e0;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        margin-right: 8px;
+    }
 
-.form-footer {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 30px;
-}
+    /* コメント表示 */
+    .comment-item { margin-bottom: 20px; }
+    .comment-user { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+    .user-icon { width: 35px; height: 35px; background: #ddd; border-radius: 50%; }
+    .comment-text { background: #eee; padding: 10px 15px; border-radius: 4px; font-size: 14px; display: inline-block; }
 
-.btn-cancel {
-    background: #ddd;
-    padding: 10px 40px;
-    text-decoration: none;
-    color: #333;
-    border-radius: 4px;
-}
+    /* 送信フォーム */
+    .comment-form textarea { width: 100%; border: 1px solid #ccc; padding: 10px; border-radius: 4px; }
+    .btn-submit {
+        background-color: #ff5a5f;
+        color: white;
+        border: none;
+        width: 100%;
+        padding: 12px;
+        border-radius: 4px;
+        margin-top: 15px;
+        font-weight: bold;
+    }
+</style>
 
-.btn-back {
-    background-color: #d3d3d3;
-    color: #333;
-    padding: 10px 40px;
-    border-radius: 5px;
-    text-decoration: none;
-}
-
-.btn-save {
-    background-color: #ffcc00;
-    color: #333;
-    padding: 10px 40px;
-    border-radius: 5px;
-    border: none;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.delete-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: -45px; /* 保存ボタンの横に並べる調整 */
-}
-
-.btn-delete-icon {
-    background: #e0e0e0;
-    border: 1px solid #ccc;
-    padding: 8px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.delete-section {
-    text-align: right;
-    margin-top: -30px;
-}
-
-.btn-delete-trash {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-    transition: transform 0.2s;
-}
-.btn-delete-trash:hover {
-    opacity: 0.7;
-}
-.trash-icon {
-    font-size: 32px;
-    color: #ff4d4d;
-    text-shadow: 0 0 0 #ff4d4d; /* 絵文字の色を強制的に赤にする */
-    -webkit-text-fill-color: transparent; /* ブラウザ標準の色を透明化 */
-    display: inline-block;
-}
-
-.btn-delete-trash:hover .trash-icon {
-    color: #cc0000;
-    text-shadow: 0 0 0 #cc0000;
-    transform: scale(1.1);
-}
-
-.logo {
-    font-size: 32px;
-    font-weight: 900;
-    color: #e3c400;
-    text-decoration: none;
-    font-style: italic;
-    font-family: 'Arial Black', sans-serif;
-    letter-spacing: -1px;
-}
-
-    </style>
-</head>
-<body>
-<header class="main-header">
-    <div class="header-container">
-        <a href="{{ route('product.index') }}" class="logo">mogitate</a>
+<div class="show-container">
+    {{-- 左側：画像 --}}
+    <div class="show-image-box">
+        <img src="{{ asset('storage/' . $product->image_url) }}" alt="{{ $product->name }}">
     </div>
-</header>
 
-<div class="container">
-    <nav class="breadcrumb">
-        <a href="{{ route('product.index') }}">商品一覧</a> &gt; <span>{{ $product->name }}</span>
-    </nav>
+    {{-- 右側：詳細 --}}
+    <div class="show-details">
+        <h1 class="product-title">{{ $product->name }}</h1>
+        <p class="brand-name">{{ $product->brand ?? 'ブランドなし' }}</p>
+        <p class="price">¥{{ number_format($product->price) }} <small>(税込)</small></p>
 
-    <form action="{{ route('product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PATCH')
-
-        <div class="main-content-layout">
-            <div class="left-column">
-                <div class="image-preview-container">
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" id="preview">
-                </div>
-                <div class="file-upload-box">
-                    <input type="file" name="image" id="image-input">
-                </div>
-                @error('image')
-                    <p class="error-message">{{ $message }}</p>
-                @enderror
+        <div class="icon-group">
+            <div class="icon-item">
+                @auth
+                    <form action="{{ $product->isLikedBy(Auth::user()) ? route('like.destroy', $product->id) : route('like.store', $product->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="like-btn">
+                            <i class="{{ $product->isLikedBy(Auth::user()) ? 'fa-solid' : 'fa-regular' }} fa-heart" style="color: {{ $product->isLikedBy(Auth::user()) ? '#ff5a5f' : '#333' }};"></i>
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="like-btn"><i class="fa-regular fa-heart"></i></a>
+                @endauth
+                <span class="icon-count">{{ $product->likes->count() }}</span>
             </div>
-
-            <div class="right-column">
-                <div class="form-group">
-                    <label>商品名</label>
-                    <input type="text" name="name" value="{{ old('name', $product->name) }}" placeholder="商品名を入力">
-                    @error('name')
-                        <p class="error-message">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label>値段</label>
-                    <input type="number" name="price" value="{{ old('price', $product->price) }}" placeholder="値段を入力">
-                    @error('price')
-                        <p class="error-message">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="form-group">
-                    <label>季節</label>
-                    <div class="season-checkbox-group">
-                        @php
-                            // DBに登録されている季節IDを取得
-                            $registeredSeasons = $product->seasons->pluck('id')->toArray();
-                        @endphp
-                        <label><input type="checkbox" name="seasons[]" value="1" {{ in_array(1, old('seasons', $registeredSeasons)) ? 'checked' : '' }}> 春</label>
-                        <label><input type="checkbox" name="seasons[]" value="2" {{ in_array(2, old('seasons', $registeredSeasons)) ? 'checked' : '' }}> 夏</label>
-                        <label><input type="checkbox" name="seasons[]" value="3" {{ in_array(3, old('seasons', $registeredSeasons)) ? 'checked' : '' }}> 秋</label>
-                        <label><input type="checkbox" name="seasons[]" value="4" {{ in_array(4, old('seasons', $registeredSeasons)) ? 'checked' : '' }}> 冬</label>
-                    </div>
-                    @error('seasons')
-                        <p class="error-message">{{ $message }}</p>
-                    @enderror
-                </div>
+            <div class="icon-item">
+                <i class="fa-regular fa-comment"></i>
+                <span class="icon-count">{{ $product->comments->count() }}</span>
             </div>
         </div>
 
-        <div class="description-area">
-            <label>商品説明</label>
-            <textarea name="description" placeholder="商品の説明を入力">{{ old('description', $product->description) }}</textarea>
-            @error('description')
-                <p class="error-message">{{ $message }}</p>
-            @enderror
+       {{-- 商品が未購入 かつ ログインユーザーが出品者本人ではない場合のみ購入ボタンを表示 --}}
+@if(!$product->buyer_id && Auth::id() !== $product->user_id)
+    <a href="{{ route('purchase.show', $product->id) }}" class="btn-purchase">購入手続きへ</a>
+
+@elseif($product->buyer_id)
+    {{-- 売却済みの場合はグレーアウト --}}
+    <button class="btn-purchase" style="background-color: #888; cursor: not-allowed;" disabled>売り切れました</button>
+
+@else
+    {{-- 出品者本人の場合 --}}
+    <button class="btn-purchase" style="background-color: #ccc; cursor: default;" disabled>自分が出品した商品です</button>
+@endif
+
+        <h2 class="section-title">商品説明</h2>
+        <div class="description-text">{{ $product->description }}</div>
+
+        <h2 class="section-title">商品の情報</h2>
+        <table class="info-table">
+            <tr>
+                <th>カテゴリー</th>
+                <td>
+                    @forelse($product->categories as $category)
+                        <span class="category-tag">{{ $category->content }}</span>
+                    @empty
+                        <span class="category-tag">洋服</span><span class="category-tag">メンズ</span>
+                    @endforelse
+                </td>
+            </tr>
+            <tr>
+                <th>商品の状態</th>
+                <td>
+    @php
+        $conditions = [
+            1 => '良好',
+            2 => '目立った傷や汚れなし',
+            3 => 'やや傷や汚れあり',
+            4 => '状態が悪い'
+        ];
+    @endphp
+    {{ $conditions[$product->condition] ?? '不明' }}
+</td>
+            </tr>
+        </table>
+
+        <h2 class="section-title">コメント({{ $product->comments->count() }})</h2>
+        <div class="comment-list">
+            @foreach($product->comments as $comment)
+                <div class="comment-item">
+                    <div class="comment-user">
+    {{-- 直接imgタグにクラスを当てる --}}
+    <img src="{{ $comment->user->image ? asset('storage/' . $comment->user->image) : asset('images/default-user.png') }}" class="user-icon">
+    <span>{{ $comment->user->name }}</span>
+</div>
+                    <div class="comment-text">{{ $comment->comment }}</div>
+                </div>
+            @endforeach
         </div>
 
-        <div class="form-footer">
-            <a href="{{ route('product.index') }}" class="btn-cancel">戻る</a>
-            <button type="submit" class="btn-save">変更を保存</button>
+        <div class="comment-form-box">
+            <p style="font-weight: bold; margin-top: 30px;">商品へのコメント</p>
+            <form action="{{ route('comment.store', $product->id) }}" method="POST" class="comment-form">
+                @csrf
+                <textarea name="comment" rows="5" required></textarea>
+                <button type="submit" class="btn-submit">コメントを送信する</button>
+                @if ($errors->has('comment'))
+    <p style="color: red; font-size: 14px;">{{ $errors->first('comment') }}</p>
+@endif
+            </form>
         </div>
-    </form>
-
-    <div class="delete-section">
-    <form action="{{ route('product.destroy', $product->id) }}" method="POST" onsubmit="return confirm('本当に削除しますか？')">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn-delete-trash" title="削除する">
-            <span class="trash-icon">🗑️</span>
-        </button>
-    </form>
+    </div>
 </div>
-</div>
-</body>
-</html>
+@endsection
